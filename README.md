@@ -1,9 +1,13 @@
 CodeToText 📄➡️🤖
+
+
+
 Want the help of AI, but it always get your code context wrong, assuming files that don't exists or making a bunch of Api calls to read every file on youdirectory? THIS IS THE TOOL FOR YOU! 
 
 A simple command-line script to help you turn all your code into a .txt file that is easy for Ai to read, get context of your application and reduce bugs and errors!
 
-![Demo](https://github.com/viitormasc/code-to-text-forAi/raw/main/demo.gif)
+![demo](https://github.com/user-attachments/assets/d10d98f7-098f-4dc0-9bfa-2727a696971d)
+
 
 🚀 Quick Install
 
