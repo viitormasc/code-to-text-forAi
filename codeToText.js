@@ -1,40 +1,26 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Define the master file name dynamically
 const currentFolder = path.basename(process.cwd());
 let fullCodeFileName = `${currentFolder}-fullcode.txt`;
 
-let filesToInclude = new Set(); // if empty, include all files
-let exclude = new Set(); // User-defined extensions to exclude
+let filesToInclude = new Set();
+let exclude = new Set();
 
-// Define programming-related file extensions
 const workOnExtentions = new Set([
-  // General Programming Languages
   '.py', '.java', '.c', '.cpp', '.h', '.hpp', '.cs', '.vb', '.r',
   '.rb', '.go', '.php', '.swift', '.kt', '.rs', '.scala', '.pl', '.lua', '.jl',
-
-  // Web Development
   '.js', '.jsx', '.ts', '.tsx', '.html', '.css', '.scss', '.less', '.sass',
-
-  // Shell & Automation
   '.sh', '.zsh', '.fish', '.ps1', '.bat', '.cmd',
-
-  // Database & Query Languages
   '.sql', '.psql', '.db', '.sqlite',
-
-  // Markup & Config Files
   '.xml', '.json', '.toml', '.ini', '.yml', '.yaml', '.md', '.rst',
-
-  // Build & Make Systems
   'Makefile', '.gradle', '.cmake', '.ninja',
-
-  // Other
   '.pqm', '.pq'
 ]);
 
-// Define directories to exclude
 const ignoreDirectories = new Set([
   'venv',
   '.venv',
@@ -48,19 +34,10 @@ const ignoreDirectories = new Set([
   'flask_session'
 ]);
 
-// Define the name of this script to exclude it
 const scriptName = path.basename(__filename);
-
-// Define files to exclude from both aggregation and directory tree
 const excludeFiles = new Set([scriptName, 'package-lock.json', 'package.json', 'temp.py']);
 
 function generateDirectoryTree(startPath) {
-  /**
-   * Generates an ASCII directory tree.
-   * - Excluded directories and their subdirectories are only listed by name without their internal files.
-   * - The script itself is excluded from the tree.
-   */
-
   let tree = "";
 
   function walkDirectory(currentPath, level = 0) {
@@ -68,7 +45,6 @@ function generateDirectoryTree(startPath) {
     const dirs = [];
     const files = [];
 
-    // Separate directories and files
     for (const item of items) {
       const fullPath = path.join(currentPath, item);
       try {
@@ -79,26 +55,21 @@ function generateDirectoryTree(startPath) {
           files.push(item);
         }
       } catch (error) {
-        // Skip items that can't be accessed
         continue;
       }
     }
 
-    // Get the current directory name for display
     const currentDir = path.basename(currentPath) || currentPath;
 
-    // Check if the current directory is excluded
     if (ignoreDirectories.has(currentDir)) {
       const indent = '│   '.repeat(level) + (level > 0 ? '├── ' : '');
       tree += `${indent}${currentDir}/ [EXCLUDED]\n`;
       return;
     }
 
-    // Add current directory to tree
     const indent = '│   '.repeat(level) + (level > 0 ? '├── ' : '');
     tree += `${indent}${currentDir}/\n`;
 
-    // Process directories
     for (const dir of dirs) {
       if (!ignoreDirectories.has(dir)) {
         walkDirectory(path.join(currentPath, dir), level + 1);
@@ -108,7 +79,6 @@ function generateDirectoryTree(startPath) {
       }
     }
 
-    // Process files
     for (const file of files) {
       if (!excludeFiles.has(file)) {
         const fileIndent = '│   '.repeat(level + 1) + '├── ';
@@ -122,29 +92,20 @@ function generateDirectoryTree(startPath) {
 }
 
 function isProgrammingFile(filename) {
-  /** Checks if a file has a programming-related extension and is not in the exclude list. */
   const ext = path.extname(filename).toLowerCase();
   return workOnExtentions.has(ext) && !exclude.has(ext);
 }
 
 function shouldExclude(filePath) {
-  /**
-   * Determines if a file should be excluded based on its path.
-   * - Excludes files in ignoreDirectories and their subdirectories.
-   * - Excludes files listed in excludeFiles.
-   */
-
   const normalizedPath = path.normalize(filePath);
   const parts = normalizedPath.split(path.sep);
 
-  // Check if any part of the path is in the ignoreDirectories
   for (let i = 0; i < parts.length - 1; i++) {
     if (ignoreDirectories.has(parts[i])) {
       return true;
     }
   }
 
-  // Check if the file itself is in excludeFiles
   if (excludeFiles.has(parts[parts.length - 1])) {
     return true;
   }
@@ -153,21 +114,14 @@ function shouldExclude(filePath) {
 }
 
 function shouldIncludeFile(filePath) {
-  /**
-   * Determines if a file should be included based on filesToInclude.
-   * If filesToInclude is empty, include all files.
-   */
   if (filesToInclude.size === 0) {
-    return true; // Include all files if the set is empty
+    return true;
   }
   const relFilePath = path.relative(process.cwd(), filePath);
   return filesToInclude.has(relFilePath);
 }
 
 function parseArguments() {
-  /**
-   * Parses command-line arguments.
-   */
   const args = process.argv.slice(2);
   const parsedArgs = {
     clipboard: false,
@@ -216,7 +170,6 @@ function parseArguments() {
 }
 
 function copyToClipboard(content) {
-  /** Copy text to the system clipboard on macOS and Windows. */
   try {
     if (process.platform === 'darwin') {
       execSync('pbcopy', { input: content, encoding: 'utf8' });
@@ -237,7 +190,6 @@ function copyToClipboard(content) {
 function main() {
   const args = parseArguments();
 
-  // Override the global options if command line arguments are provided
   if (args.outputFile) {
     fullCodeFileName = args.outputFile;
   }
@@ -262,7 +214,6 @@ function main() {
     exclude = new Set(args.excludeExtensions.split(',').map(ext => ext.trim()).filter(ext => ext));
   }
 
-  // Debugging console statement to verify exclusions
   console.log(`Excluding extensions: ${Array.from(exclude).join(', ')}`);
 
   const startPath = args.directory;
@@ -272,12 +223,9 @@ function main() {
     process.exit(1);
   }
 
-  // Generate directory tree
   const directoryTree = generateDirectoryTree(startPath);
-
   let aggregatedContent = "Directory Tree:\n" + directoryTree + "\n\n";
 
-  // Function to traverse directory and process files
   function processDirectory(dirPath) {
     const items = fs.readdirSync(dirPath);
 
@@ -288,12 +236,10 @@ function main() {
         const stat = fs.statSync(fullPath);
 
         if (stat.isDirectory()) {
-          // Check if directory should be excluded
           if (ignoreDirectories.has(item)) {
-            continue; // Skip this directory
+            continue;
           }
 
-          // Check if any parent directory is excluded (already handled in shouldExclude)
           const relPath = path.relative(startPath, fullPath);
           if (shouldExclude(relPath)) {
             continue;
@@ -301,20 +247,16 @@ function main() {
 
           processDirectory(fullPath);
         } else {
-          // Process file
           const ext = path.extname(item).toLowerCase();
 
-          // Skip files with excluded extensions
           if (exclude.has(ext)) {
             continue;
           }
 
-          // Skip non-programming files
           if (!isProgrammingFile(item)) {
             continue;
           }
 
-          // Get relative path for exclusion and headers
           const relFilePath = path.relative(startPath, fullPath);
 
           if (shouldExclude(relFilePath) || !shouldIncludeFile(fullPath)) {
@@ -333,17 +275,14 @@ function main() {
           }
         }
       } catch (error) {
-        // Skip items that can't be accessed
         continue;
       }
     }
   }
 
-  // Start processing from the root directory
   processDirectory(startPath);
 
   if (args.clipboard) {
-    // Copy the aggregated content to the clipboard
     const success = copyToClipboard(aggregatedContent);
     if (success) {
       console.log("Aggregated content has been copied to the clipboard successfully.");
@@ -352,7 +291,6 @@ function main() {
       process.exit(1);
     }
   } else {
-    // Write the aggregated content to the master file
     try {
       fs.writeFileSync(fullCodeFileName, aggregatedContent, 'utf8');
       console.log(`Full code file '${fullCodeFileName}' has been created successfully.`);
@@ -363,7 +301,6 @@ function main() {
   }
 }
 
-// Run the main function if this script is executed directly
 if (require.main === module) {
   main();
 }

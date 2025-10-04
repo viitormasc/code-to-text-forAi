@@ -1,0 +1,16 @@
+{
+  "name": "code-to-text-for-ai",
+  "version": "1.0.0",
+  "description": "Aggregate code files into a single text file with directory tree for AI processing",
+  "main": "codeToText.js",
+  "bin": {
+    "codeToText": "./codeToText.js"
+  },
+  "keywords": ["code", "aggregate", "ai", "text", "directory-tree"],
+  "author": "Vitor Mascarenhas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viitormasc/code-to-text-forAi"
+  }
+}
