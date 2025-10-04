@@ -11,7 +11,7 @@ if ! command -v node &> /dev/null; then
 fi
 
 SCRIPT_URL="https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/codeToText.js"
-SCRIPT_DIR="$HOME/.scripts"
+SCRIPT_DIR="$HOME/.local/bin"
 SCRIPT_PATH="$SCRIPT_DIR/codeToText"
 
 mkdir -p "$SCRIPT_DIR"
@@ -28,9 +28,10 @@ fi
 
 chmod +x "$SCRIPT_PATH"
 
+# Add to PATH for all major shells
 add_to_shell() {
     local shell_rc="$1"
-    local export_line='export PATH="$HOME/.scripts:$PATH"'
+    local export_line="$2"
     
     if [ -f "$shell_rc" ]; then
         if ! grep -q "$export_line" "$shell_rc"; then
@@ -42,29 +43,64 @@ add_to_shell() {
     fi
 }
 
-if [ -n "$BASH_VERSION" ]; then
-    add_to_shell ~/.bashrc
-    [ -f ~/.bash_profile ] && add_to_shell ~/.bash_profile
+# Define PATH additions for different shells
+LOCAL_BIN_PATH='export PATH="$HOME/.local/bin:$PATH"'
+
+# Update all common shell configuration files
+echo "🔧 Configuring shell support..."
+
+# bash
+add_to_shell ~/.bashrc "$LOCAL_BIN_PATH"
+add_to_shell ~/.bash_profile "$LOCAL_BIN_PATH"
+add_to_shell ~/.profile "$LOCAL_BIN_PATH"
+
+# zsh
+add_to_shell ~/.zshrc "$LOCAL_BIN_PATH"
+add_to_shell ~/.zshenv "$LOCAL_BIN_PATH"
+add_to_shell ~/.zprofile "$LOCAL_BIN_PATH"
+
+# fish
+if command -v fish &> /dev/null; then
+    FISH_CONFIG_DIR="$HOME/.config/fish"
+    mkdir -p "$FISH_CONFIG_DIR"
+    FISH_PATH="set -gx PATH \$HOME/.local/bin \$PATH"
+    add_to_shell "$FISH_CONFIG_DIR/config.fish" "$FISH_PATH"
 fi
 
-if [ -n "$ZSH_VERSION" ]; then
-    add_to_shell ~/.zshrc
-fi
+# tcsh/csh
+add_to_shell ~/.tcshrc "setenv PATH ~/.local/bin:\$PATH"
+add_to_shell ~/.cshrc "setenv PATH ~/.local/bin:\$PATH"
 
-echo "🔁 Reloading shell configuration..."
-if [ -n "$ZSH_VERSION" ]; then
-    source ~/.zshrc 2>/dev/null || true
-else
-    source ~/.bashrc 2>/dev/null || true
-fi
+# ksh
+add_to_shell ~/.kshrc "export PATH=\"\$HOME/.local/bin:\$PATH\""
+add_to_shell ~/.profile "$LOCAL_BIN_PATH"  # ksh also uses .profile
+
+# Create a universal script that works everywhere
+UNIVERSAL_SCRIPT="$HOME/.local/bin/codeToText-universal"
+cat > "$UNIVERSAL_SCRIPT" << 'EOF'
+#!/bin/sh
+exec node "$HOME/.local/bin/codeToText" "$@"
+EOF
+chmod +x "$UNIVERSAL_SCRIPT"
 
 echo ""
 echo "🎉 Installation complete!"
 echo ""
-echo "Usage:"
-echo "  codeToText                          # Create full code file in current directory"
-echo "  codeToText --clipboard              # Copy to clipboard instead of file"
-echo "  codeToText --directory /path/to/project"
-echo "  codeToText --include-files \"src/index.js,src/utils.js\""
-echo "  codeToText --exclude-dirs \"node_modules,dist\""
+echo "📋 Available commands:"
+echo "   codeToText           # Primary command"
+echo "   codeToText-universal # Fallback command"
 echo ""
+echo "🔄 Please restart your terminal or run one of these commands to reload:"
+echo "   source ~/.bashrc     # for bash"
+echo "   source ~/.zshrc      # for zsh"
+echo "   exec \$SHELL         # for current shell"
+echo ""
+echo "📖 Usage examples:"
+echo "   codeToText                          # Create full code file in current directory"
+echo "   codeToText --clipboard              # Copy to clipboard instead of file"
+echo "   codeToText --directory /path/to/project"
+echo "   codeToText --include-files \"src/index.js,src/utils.js\""
+echo "   codeToText --exclude-dirs \"node_modules,dist\""
+echo ""
+echo "🔍 Test installation:"
+echo "   codeToText --help"
