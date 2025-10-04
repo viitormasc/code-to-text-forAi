@@ -6,7 +6,11 @@ Want the help of AI, but it always get your code context wrong, assuming files t
 
 A simple command-line script to help you turn all your code into a .txt file that is easy for Ai to read, get context of your application and reduce bugs and errors!
 
-![demo](https://github.com/user-attachments/assets/d10d98f7-098f-4dc0-9bfa-2727a696971d)
+
+
+https://github.com/user-attachments/assets/7f5464ad-a903-4510-825d-6c8d0bfc1a72
+
+
 
 
 🚀 Quick Install
