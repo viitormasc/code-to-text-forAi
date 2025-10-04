@@ -1,25 +1,25 @@
-CodeToText 
+CodeToText 📄➡️🤖
+Want the help of AI, but it always get your code context wrong, assuming files that don't exists or making a bunch of Api calls to read every file on youdirectory? THIS IS THE TOOL FOR YOU! 
 
-A powerful command-line tool that aggregates all code files in your project into a single text file with a directory tree structure. Perfect for sharing complete codebases with AI assistants, code reviews, or documentation.
+A simple command-line script to help you turn all your code into a .txt file that is easy for Ai to read, get context of your application and reduce bugs and errors!
 
-https://img.shields.io/badge/license-MIT-blue.svg
-https://img.shields.io/badge/Node.js-14+-green.svg
-https://img.shields.io/badge/platform-Windows%2520%257C%2520macOS%2520%257C%2520Linux-lightgrey.svg
- Quick Install
+![Demo](https://github.com/viitormasc/code-to-text-forAi/raw/main/demo.gif)
+
+🚀 Quick Install
 
 One-line installation (works on Windows, macOS, and Linux):
 bash
 
-curl -fsSL https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/install.sh | bash
 
 Restart your terminal or run:
 bash
 
-source ~/.zshrc  # for zsh
+    source ~/.zshrc  # for zsh
 # OR
-source ~/.bashrc # for bash
+    source ~/.bashrc # for bash
 
- What It Does
+✨ What It Does
 
 CodeToText scans your project directory and creates a comprehensive text file containing:
 
@@ -43,7 +43,7 @@ Perfect for:
 
     Debugging and analysis
 
- Usage Examples
+🎯 Usage Examples
 Basic Usage
 bash
 
@@ -81,7 +81,7 @@ codeToText --directory /path/to/another/project
 # Custom output filename
 codeToText --output-file "project-analysis.txt"
 
-📋 Full Command Reference
+Full Command Reference
 Option	Short	Description
 --clipboard	-c	Copy output to clipboard instead of file
 --directory	-d	Specify directory to scan (default: current)
@@ -269,6 +269,106 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 💡 Backup: Create project snapshots before major refactors.
 
 Ready to streamline your code sharing? Install now and experience the power of complete project context! 🚀
+bash
+
+curl -fsSL https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/install.sh | bash
+
+make a cleaner version of this README, more easy and fast to read
+
+We are going to create a cleaner, more concise README with clear sections and examples.
+We'll focus on the essential information and make it easy to scan.
+CodeToText
+
+Aggregate your entire codebase into a single text file. Perfect for sharing with AI assistants.
+Quick Start
+
+Install:
+bash
+
+curl -fsSL https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/install.sh | bash
+
+Restart terminal or run:
+bash
+
+source ~/.zshrc    # for zsh
+# or
+source ~/.bashrc   # for bash
+
+Usage
+
+Basic:
+bash
+
+codeToText                        # Creates project-fullcode.txt
+codeToText --clipboard           # Copies to clipboard
+
+Examples:
+bash
+
+# Share with AI
+codeToText --clipboard
+
+# Specific files only
+codeToText --include-files "src/index.js,src/utils.js"
+
+# Exclude dependencies
+codeToText --exclude-dirs "node_modules,dist,venv"
+
+# Custom output
+codeToText --output-file "analysis.txt" --directory /path/to/project
+
+Options
+Option	Description
+-c, --clipboard	Copy to clipboard
+-d, --directory	Target directory
+-o, --output-file	Output filename
+-i, --include-files	Specific files to include
+-e, --exclude-dirs	Directories to exclude
+-x, --extensions	File extensions to include
+What's Included
+
+File Types: .js, .ts, .py, .java, .html, .css, .json, .md, and 30+ more
+
+Auto-Excluded: node_modules/, .git/, venv/, dist/, build/
+Example Output
+text
+
+Directory Tree:
+project/
+├── src/
+│   ├── index.js
+│   └── utils.js
+└── README.md
+
+# ======================
+# File: src/index.js
+# ======================
+
+console.log('Hello World');
+
+...
+
+Use Cases
+
+    AI Sharing: Paste entire projects to ChatGPT/Copilot
+
+    Code Reviews: Share complete context
+
+    Documentation: Create project snapshots
+
+    Backups: Archive code state
+
+Troubleshooting
+
+Command not found?
+bash
+
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+Clipboard not working? Use file output instead.
+
+Get started:
 bash
 
 curl -fsSL https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/install.sh | bash
