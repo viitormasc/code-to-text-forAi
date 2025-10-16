@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🚀 Installing codeToText command..."
+echo "🚀 Installing codetotext command..."
 
 if ! command -v node &> /dev/null; then
     echo "❌ Node.js is required but not installed. Please install Node.js first:"
@@ -10,13 +10,13 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-SCRIPT_URL="https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/codeToText.js"
+SCRIPT_URL="https://raw.githubusercontent.com/viitormasc/code-to-text-forAi/main/codetotext.js"
 SCRIPT_DIR="$HOME/.local/bin"
-SCRIPT_PATH="$SCRIPT_DIR/codeToText"
+SCRIPT_PATH="$SCRIPT_DIR/codetotext"
 
 mkdir -p "$SCRIPT_DIR"
 
-echo "📥 Downloading codeToText script..."
+echo "📥 Downloading codetotext script..."
 if command -v curl &> /dev/null; then
     curl -fsSL "$SCRIPT_URL" -o "$SCRIPT_PATH"
 elif command -v wget &> /dev/null; then
@@ -76,10 +76,10 @@ add_to_shell ~/.kshrc "export PATH=\"\$HOME/.local/bin:\$PATH\""
 add_to_shell ~/.profile "$LOCAL_BIN_PATH"  # ksh also uses .profile
 
 # Create a universal script that works everywhere
-UNIVERSAL_SCRIPT="$HOME/.local/bin/codeToText-universal"
+UNIVERSAL_SCRIPT="$HOME/.local/bin/codetotext-universal"
 cat > "$UNIVERSAL_SCRIPT" << 'EOF'
 #!/bin/sh
-exec node "$HOME/.local/bin/codeToText" "$@"
+exec node "$HOME/.local/bin/codetotext" "$@"
 EOF
 chmod +x "$UNIVERSAL_SCRIPT"
 
@@ -87,8 +87,8 @@ echo ""
 echo "🎉 Installation complete!"
 echo ""
 echo "📋 Available commands:"
-echo "   codeToText           # Primary command"
-echo "   codeToText-universal # Fallback command"
+echo "   codetotext           # Primary command"
+echo "   codetotext-universal # Fallback command"
 echo ""
 echo "🔄 Please restart your terminal or run one of these commands to reload:"
 echo "   source ~/.bashrc     # for bash"
@@ -96,11 +96,11 @@ echo "   source ~/.zshrc      # for zsh"
 echo "   exec \$SHELL         # for current shell"
 echo ""
 echo "📖 Usage examples:"
-echo "   codeToText                          # Create full code file in current directory"
-echo "   codeToText --clipboard              # Copy to clipboard instead of file"
-echo "   codeToText --directory /path/to/project"
-echo "   codeToText --include-files \"src/index.js,src/utils.js\""
-echo "   codeToText --exclude-dirs \"node_modules,dist\""
+echo "   codetotext                          # Create full code file in current directory"
+echo "   codetotext --clipboard              # Copy to clipboard instead of file"
+echo "   codetotext --directory /path/to/project"
+echo "   codetotext --include-files \"src/index.js,src/utils.js\""
+echo "   codetotext --exclude-dirs \"node_modules,dist\""
 echo ""
 echo "🔍 Test installation:"
-echo "   codeToText --help"
+echo "   codetotext --help"
